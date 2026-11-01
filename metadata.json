@@ -1,0 +1,6 @@
+{
+  "name": "Event AI — Personal Event Planning Assistant",
+  "description": "Production-grade, GenAI-powered event planning platform for weddings, corporate gatherings, birthdays, and community celebrations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

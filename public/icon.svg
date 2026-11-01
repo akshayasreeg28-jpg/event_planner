@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4B2A7B" />
+      <stop offset="100%" stop-color="#2D174E" />
+    </linearGradient>
+    <linearGradient id="coralGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FF9D8E" />
+      <stop offset="100%" stop-color="#FF7A6B" />
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FCD34D" />
+      <stop offset="100%" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <!-- Background with subtle rounded shape -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  
+  <!-- Calendar / Stage Outline -->
+  <rect x="110" y="140" width="292" height="260" rx="36" fill="white" fill-opacity="0.08" stroke="white" stroke-opacity="0.25" stroke-width="8" />
+  <path d="M110 210 L402 210" stroke="white" stroke-opacity="0.2" stroke-width="6" />
+
+  <!-- Rings / Pegs -->
+  <rect x="170" y="110" width="24" height="60" rx="12" fill="url(#coralGrad)" />
+  <rect x="318" y="110" width="24" height="60" rx="12" fill="url(#coralGrad)" />
+
+  <!-- Heart / Sparkle / AI Star Center -->
+  <path d="M256 245 L268 285 L308 297 L268 309 L256 349 L244 309 L204 297 L244 285 Z" fill="url(#coralGrad)" />
+  
+  <!-- Mini AI Sparkle Top Right -->
+  <path d="M350 230 L356 250 L376 256 L356 262 L350 282 L344 262 L324 256 L344 250 Z" fill="url(#goldGrad)" />
+  
+  <!-- Mini Sparkle Bottom Left -->
+  <circle cx="170" cy="320" r="10" fill="#FF7A6B" />
+  <circle cx="195" cy="345" r="5" fill="#FCD34D" />
+</svg>

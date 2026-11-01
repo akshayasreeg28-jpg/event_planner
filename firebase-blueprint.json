@@ -1,0 +1,83 @@
+{
+  "entities": {
+    "User": {
+      "collection": "users",
+      "fields": {
+        "uid": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "avatar": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "timestamp" },
+        "updatedAt": { "type": "timestamp" }
+      }
+    },
+    "Event": {
+      "collection": "events",
+      "fields": {
+        "ownerId": { "type": "string" },
+        "title": { "type": "string" },
+        "type": { "type": "string" },
+        "date": { "type": "string" },
+        "endDate": { "type": "string" },
+        "startTime": { "type": "string" },
+        "endTime": { "type": "string" },
+        "city": { "type": "string" },
+        "guestCount": { "type": "number" },
+        "totalBudgetMinor": { "type": "number" },
+        "currency": { "type": "string" },
+        "collaboratorUids": { "type": "array" },
+        "collaboratorEmails": { "type": "array" },
+        "status": { "type": "string" },
+        "coverImageUrl": { "type": "string" },
+        "createdAt": { "type": "timestamp" },
+        "updatedAt": { "type": "timestamp" }
+      },
+      "subcollections": [
+        "planSections",
+        "budgetItems",
+        "tasks",
+        "vendors",
+        "guests",
+        "ideas",
+        "venues",
+        "chatMessages",
+        "issueLog",
+        "runOfShow"
+      ]
+    },
+    "RsvpToken": {
+      "collection": "rsvpTokens",
+      "fields": {
+        "token": { "type": "string" },
+        "eventId": { "type": "string" },
+        "guestId": { "type": "string" },
+        "guestName": { "type": "string" },
+        "rsvpStatus": { "type": "string" },
+        "plusOnes": { "type": "number" },
+        "dietaryNeeds": { "type": "string" },
+        "dietaryNotes": { "type": "string" },
+        "respondedAt": { "type": "timestamp" },
+        "updatedAt": { "type": "string" }
+      }
+    }
+  },
+  "indexes": [
+    {
+      "collectionGroup": "tasks",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "phase", "order": "ASCENDING" },
+        { "fieldPath": "deadline", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "budgetItems",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "category", "order": "ASCENDING" },
+        { "fieldPath": "dueDate", "order": "ASCENDING" }
+      ]
+    }
+  ]
+}

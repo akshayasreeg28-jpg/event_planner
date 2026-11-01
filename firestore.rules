@@ -1,0 +1,108 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for auth & role verification
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUser(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isEventOwner(eventData) {
+      return isAuthenticated() && eventData.ownerId == request.auth.uid;
+    }
+
+    function isEventCollaborator(eventData) {
+      return isAuthenticated() && (
+        eventData.ownerId == request.auth.uid ||
+        ('collaboratorUids' in eventData && request.auth.uid in eventData.collaboratorUids) ||
+        ('collaboratorEmails' in eventData && request.auth.token.email != null && request.auth.token.email in eventData.collaboratorEmails) ||
+        ('collaborators' in eventData && request.auth.uid in eventData.collaborators)
+      );
+    }
+
+    function getEvent(eventId) {
+      return get(/databases/$(database)/documents/events/$(eventId)).data;
+    }
+
+    // Users collection: Private user accounts
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow write: if isUser(userId);
+    }
+
+    // Events collection: Strict owner & collaborator role enforcement
+    match /events/{eventId} {
+      allow read: if isAuthenticated() && isEventCollaborator(resource.data);
+      allow create: if isAuthenticated() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if isAuthenticated() && isEventCollaborator(resource.data);
+      allow delete: if isAuthenticated() && isEventOwner(resource.data);
+
+      // Subcollections under events
+      match /planSections/{sectionId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /budgetItems/{itemId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /tasks/{taskId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /vendors/{vendorId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+
+        match /quotes/{quoteId} {
+          allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+        }
+      }
+
+      match /guests/{guestId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /ideas/{ideaId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /venues/{venueId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /chatMessages/{messageId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /issueLog/{issueId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+
+      match /runOfShow/{rosId} {
+        allow read, write: if isAuthenticated() && isEventCollaborator(getEvent(eventId));
+      }
+    }
+
+    // Public RSVP Tokens collection:
+    // Allows GET by exact token only (listing all tokens is forbidden),
+    // and allows update ONLY on designated guest response fields.
+    match /rsvpTokens/{token} {
+      allow get: if true;
+      allow list: if false;
+      allow create: if isAuthenticated();
+      allow update: if request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+        'rsvpStatus',
+        'plusOnes',
+        'dietaryNeeds',
+        'dietaryNotes',
+        'respondedAt',
+        'updatedAt'
+      ]);
+      allow delete: if isAuthenticated();
+    }
+  }
+}
